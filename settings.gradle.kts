@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "calendarview"
 include(":app")
+include(":compose")
+include(":model")
