@@ -1,19 +1,20 @@
 package com.benidict.compose.utilities
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.benidict.model.CalendarUIModel
 import java.time.LocalDate
 import java.time.YearMonth
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun <T> daysInMonth(date: LocalDate, events: List<T>?): ArrayList<CalendarUIModel<T>> {
+fun <T: Any> daysInMonth(selectedDate: LocalDate, events: List<T>?): ArrayList<CalendarUIModel<T>> {
     val daysInMonthArray = ArrayList<CalendarUIModel<T>>()
-    val months = YearMonth.from(date)
+    val months = YearMonth.from(selectedDate)
     val days = months.lengthOfMonth()
-    val firstDayOfMonth: LocalDate = date.withDayOfMonth(1)
+    val firstDayOfMonth: LocalDate = selectedDate.withDayOfMonth(1)
     val dayOfWeek = firstDayOfMonth.dayOfWeek.value
-    val month = parseCalendarMonthFormat(date.toString())
+    val month = parseCalendarMonthFormat(selectedDate.toString())
     for (i in 1..42) {
         if (i <= dayOfWeek || i > (days + dayOfWeek)) {
             daysInMonthArray.add(
@@ -38,7 +39,7 @@ fun <T> daysInMonth(date: LocalDate, events: List<T>?): ArrayList<CalendarUIMode
     return daysInMonthArray
 }
 
-fun <T> removeTheEmptyFirstWeek(daysInMonth: ArrayList<CalendarUIModel<T>>): ArrayList<CalendarUIModel<T>> {
+fun <T: Any> removeTheEmptyFirstWeek(daysInMonth: ArrayList<CalendarUIModel<T>>): ArrayList<CalendarUIModel<T>> {
     var daysEmptyCounter = 0
     daysInMonth.forEachIndexed { index, calendarUIModel ->
         when (index) {
@@ -54,7 +55,7 @@ fun <T> removeTheEmptyFirstWeek(daysInMonth: ArrayList<CalendarUIModel<T>>): Arr
     }
 }
 
-private fun <T> setNewSetOfDate(daysInMonth: ArrayList<CalendarUIModel<T>>): ArrayList<CalendarUIModel<T>> {
+private fun <T: Any> setNewSetOfDate(daysInMonth: ArrayList<CalendarUIModel<T>>): ArrayList<CalendarUIModel<T>> {
     val newDaysInMonth = ArrayList<CalendarUIModel<T>>()
     daysInMonth.forEachIndexed { index, calendarUIModel ->
         if (index >= 7) {
@@ -70,3 +71,5 @@ fun parseCalendarMonthFormat(calendarDate: String): String {
 
     return "${split[0]}-${split[1]}"
 }
+
+fun getDayToday(): LocalDate = LocalDate.now()
