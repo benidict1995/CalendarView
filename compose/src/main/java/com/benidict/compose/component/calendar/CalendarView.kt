@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.benidict.compose.component.control.CalendarController
 import com.benidict.compose.component.day.DayHeader
 import com.benidict.compose.component.day.DayView
 import com.benidict.compose.utilities.daysInMonth
@@ -30,27 +31,44 @@ import java.time.LocalDate
 @SuppressLint("ModifierParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun <T : Any> MonthCalendarView(selectedDate: LocalDate, events: List<T>) {
+fun <T : Any> MonthCalendarView(
+    selectedDate: LocalDate, events: List<T>, onForward: (() -> Unit)? = null,
+    onBackward: (() -> Unit)? = null
+) {
     val days: ArrayList<CalendarUIModel<T>> = daysInMonth(selectedDate, events)
     val filteredDaysInMonth = removeTheEmptyFirstWeek(days)
     Column {
+        Spacer(modifier = Modifier.height(20.dp))
+        CalendarController(selectedDate, onBackward = {
+            onBackward?.invoke()
+        }, onForward = {
+            onForward?.invoke()
+        })
+        Spacer(modifier = Modifier.height(20.dp))
         DayHeader()
         Spacer(modifier = Modifier.height(10.dp))
-        LazyVerticalGrid (
+        LazyVerticalGrid(
             columns = GridCells.Fixed(7)
         ) {
             items(filteredDaysInMonth.size) { day ->
                 Box(
-                    modifier = Modifier.weight(1.0f, true)
+                    modifier = Modifier
+                        .weight(1.0f, true)
                         .then(
-                        Modifier.wrapContentSize(Alignment.Center)
-                    )
+                            Modifier.wrapContentSize(Alignment.Center)
+                        )
                 ) {
                     Column {
                         Spacer(
-                            modifier = Modifier.height(10.dp).width(5.dp)
+                            modifier = Modifier
+                                .height(10.dp)
+                                .width(5.dp)
                         )
-                        DayView(filteredDaysInMonth[day].day.orEmpty(), filteredDaysInMonth[day].date.orEmpty(), CircleShape)
+                        DayView(
+                            filteredDaysInMonth[day].day.orEmpty(),
+                            filteredDaysInMonth[day].date.orEmpty(),
+                            CircleShape
+                        )
                     }
                 }
             }
