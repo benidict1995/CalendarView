@@ -16,6 +16,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,35 +36,36 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun <T : Any> MonthCalendarView(
+    modifier: Modifier,
     selectedDate: LocalDate, events: List<T>, onForward: (() -> Unit)? = null,
     onBackward: (() -> Unit)? = null
 ) {
     val days: ArrayList<CalendarUIModel<T>> = daysInMonth(selectedDate, events)
     val filteredDaysInMonth = removeTheEmptyFirstWeek(days)
     Column {
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = modifier.height(20.dp))
         CalendarController(selectedDate, onBackward = {
             onBackward?.invoke()
         }, onForward = {
             onForward?.invoke()
         })
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = modifier.height(20.dp))
         DayHeader()
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = modifier.height(10.dp))
         LazyVerticalGrid(
             columns = GridCells.Fixed(7)
         ) {
             items(filteredDaysInMonth.size) { day ->
                 Box(
-                    modifier = Modifier
+                    modifier = modifier
                         .weight(1.0f, true)
                         .then(
-                            Modifier.wrapContentSize(Alignment.Center)
+                            modifier.wrapContentSize(Alignment.Center)
                         )
                 ) {
                     Column {
                         Spacer(
-                            modifier = Modifier
+                            modifier = modifier
                                 .height(10.dp)
                                 .width(5.dp)
                         )
@@ -81,6 +86,6 @@ fun <T : Any> MonthCalendarView(
 @Composable
 fun MonthCalendarViewPreview() {
     MaterialTheme {
-        MonthCalendarView(LocalDate.now(), emptyList())
+        MonthCalendarView(Modifier, LocalDate.now(), emptyList())
     }
 }

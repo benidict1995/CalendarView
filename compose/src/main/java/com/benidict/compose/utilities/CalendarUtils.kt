@@ -72,4 +72,15 @@ fun parseCalendarMonthFormat(calendarDate: String): String {
     return "${split[0]}-${split[1]}"
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun getDayToday(): LocalDate = LocalDate.now()
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun previousMonth(selectedDate: LocalDate, refreshView: (LocalDate) -> Unit) {
+    refreshView(selectedDate.minusMonths(1))
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun nextMonth(selectedDate: LocalDate, refreshView: (LocalDate) -> Unit) {
+    refreshView(selectedDate.plusMonths(1))
+}
