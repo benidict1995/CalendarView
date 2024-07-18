@@ -27,9 +27,11 @@ import androidx.compose.ui.unit.dp
 import com.benidict.compose.component.control.CalendarController
 import com.benidict.compose.component.day.DayHeader
 import com.benidict.compose.component.day.DayView
+import com.benidict.compose.shape.CircleEventLegendsView
 import com.benidict.compose.utilities.daysInMonth
 import com.benidict.compose.utilities.removeTheEmptyFirstWeek
 import com.benidict.model.CalendarUIModel
+import com.benidict.model.EventUIModel
 import java.time.LocalDate
 
 @SuppressLint("ModifierParameter")
@@ -37,7 +39,10 @@ import java.time.LocalDate
 @Composable
 fun <T : Any> MonthCalendarView(
     modifier: Modifier,
-    selectedDate: LocalDate, events: List<T>, onForward: (() -> Unit)? = null,
+    selectedDate: LocalDate,
+    events: List<EventUIModel<T>>,
+    onRefresh: ((Boolean))?= null,
+    onForward: (() -> Unit)? = null,
     onBackward: (() -> Unit)? = null
 ) {
     val days: ArrayList<CalendarUIModel<T>> = daysInMonth(selectedDate, events)
@@ -63,6 +68,7 @@ fun <T : Any> MonthCalendarView(
                             modifier.wrapContentSize(Alignment.Center)
                         )
                 ) {
+                    val eventList = filteredDaysInMonth[day].events
                     Column {
                         Spacer(
                             modifier = modifier
@@ -74,6 +80,11 @@ fun <T : Any> MonthCalendarView(
                             filteredDaysInMonth[day].date.orEmpty(),
                             CircleShape
                         )
+                        Log.d("makerChecker", "filteredDaysInMonth[day]:${filteredDaysInMonth[day]}")
+                        Spacer(Modifier.height(4.dp))
+                        if (eventList?.isNotEmpty() == true) {
+                            CircleEventLegendsView()
+                        }
                     }
                 }
             }
@@ -85,7 +96,8 @@ fun <T : Any> MonthCalendarView(
 @Preview(showBackground = true)
 @Composable
 fun MonthCalendarViewPreview() {
+    val events: List<EventUIModel<Any>> = emptyList()
     MaterialTheme {
-        MonthCalendarView(Modifier, LocalDate.now(), emptyList())
+        MonthCalendarView(modifier =  Modifier, selectedDate =  LocalDate.now(), events =  events)
     }
 }

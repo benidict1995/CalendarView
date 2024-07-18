@@ -1,6 +1,8 @@
 package com.benidict.compose.component.day
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +19,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.benidict.compose.utilities.getDayToday
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DayView(day: String, date: String, shape: Shape) {
     Column(

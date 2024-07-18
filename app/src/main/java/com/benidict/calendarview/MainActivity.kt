@@ -18,13 +18,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.benidict.calendarview.dummy.events
 import com.benidict.calendarview.ui.theme.CalendarviewTheme
 import com.benidict.compose.component.calendar.MonthCalendarView
 import com.benidict.compose.utilities.nextMonth
 import com.benidict.compose.utilities.previousMonth
+import com.benidict.model.EventUIModel
 import java.time.LocalDate
 
 class MainActivity : ComponentActivity() {
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +37,7 @@ class MainActivity : ComponentActivity() {
                 var selectedDateState by remember { mutableStateOf(LocalDate.now()) }
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
-                        MonthCalendarView(Modifier, selectedDateState, emptyList(),
+                        MonthCalendarView(Modifier, selectedDateState, events,
                             onBackward = {
                                 previousMonth(selectedDateState) {
                                     selectedDateState = it
@@ -56,7 +59,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun GreetingPreview() {
         CalendarviewTheme {
-            MonthCalendarView(Modifier, LocalDate.now(), emptyList())
+            MonthCalendarView(Modifier, LocalDate.now(), events)
         }
     }
 }

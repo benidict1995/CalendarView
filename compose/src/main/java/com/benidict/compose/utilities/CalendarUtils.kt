@@ -4,11 +4,12 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.benidict.model.CalendarUIModel
+import com.benidict.model.EventUIModel
 import java.time.LocalDate
 import java.time.YearMonth
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun <T: Any> daysInMonth(selectedDate: LocalDate, events: List<T>?): ArrayList<CalendarUIModel<T>> {
+fun <T: Any> daysInMonth(selectedDate: LocalDate, events: List<EventUIModel<T>>?): ArrayList<CalendarUIModel<T>> {
     val daysInMonthArray = ArrayList<CalendarUIModel<T>>()
     val months = YearMonth.from(selectedDate)
     val days = months.lengthOfMonth()
@@ -26,12 +27,20 @@ fun <T: Any> daysInMonth(selectedDate: LocalDate, events: List<T>?): ArrayList<C
                 )
             )
         } else {
+            val eventsss = mapEventToCalendarEvents(
+                YearMonth.parse(month).atDay((i - dayOfWeek)).toString(),
+                events?: emptyList()
+            )
+            Log.d("makerChecker", "eventsss:$eventsss")
             daysInMonthArray.add(
                 CalendarUIModel(
                     id = i,
                     day = (i - dayOfWeek).toString(),
                     date = YearMonth.parse(month).atDay((i - dayOfWeek)).toString(),
-                    events = events
+                    events = mapEventToCalendarEvents(
+                        YearMonth.parse(month).atDay((i - dayOfWeek)).toString(),
+                        events?: emptyList()
+                    )
                 )
             )
         }
@@ -83,4 +92,26 @@ fun previousMonth(selectedDate: LocalDate, refreshView: (LocalDate) -> Unit) {
 @RequiresApi(Build.VERSION_CODES.O)
 fun nextMonth(selectedDate: LocalDate, refreshView: (LocalDate) -> Unit) {
     refreshView(selectedDate.plusMonths(1))
+}
+
+private fun <T> mapEventToCalendarEvents(dateToday: String, events: List<EventUIModel<T>>): List<EventUIModel<T>> {
+    val calendarEvents: ArrayList<EventUIModel<T>> = ArrayList()
+    events.filter {
+        mapEventDateRangeEvent(
+            dateToday = dateToday,
+            eventUIModel = it
+        )
+    }.map {
+        calendarEvents.add(it)
+    }
+
+    return calendarEvents
+}
+
+private fun <T> mapEventDateRangeEvent(
+    dateToday: String,
+    eventUIModel: EventUIModel<T>
+): Boolean {
+    return (dateToday >= (eventUIModel.startDate)) &&
+            (dateToday <= (eventUIModel.endDate))
 }

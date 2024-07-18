@@ -1,8 +1,8 @@
 package com.benidict.model
 
-data class CalendarUIModel<T>(
+data class CalendarUIModel <T>(
     val id: Int?,
     val day: String?,
     val date: String?,
-    val events: List<T>?
+    val events: List<EventUIModel<T>>?
 )
