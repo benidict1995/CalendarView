@@ -80,7 +80,6 @@ fun <T : Any> MonthCalendarView(
                             filteredDaysInMonth[day].date.orEmpty(),
                             CircleShape
                         )
-                        Log.d("makerChecker", "filteredDaysInMonth[day]:${filteredDaysInMonth[day]}")
                         Spacer(Modifier.height(4.dp))
                         if (eventList?.isNotEmpty() == true) {
                             CircleEventLegendsView()
