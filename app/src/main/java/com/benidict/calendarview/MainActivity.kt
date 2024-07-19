@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.benidict.calendarview.dummy.events
 import com.benidict.calendarview.ui.theme.CalendarviewTheme
 import com.benidict.compose.component.calendar.MonthCalendarView
+import com.benidict.compose.utilities.monthYearFromDate
 import com.benidict.compose.utilities.nextMonth
 import com.benidict.compose.utilities.previousMonth
 import java.time.LocalDate
@@ -46,6 +47,8 @@ class MainActivity : ComponentActivity() {
                                 nextMonth(selectedDateState) {
                                     selectedDateState = it
                                 }
+                            }, onYearChanged = {
+                                selectedDateState =  selectedDateState.withYear(it)
                             })
                     }
                 }
@@ -59,7 +62,9 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun GreetingPreview() {
         CalendarviewTheme {
-            MonthCalendarView(Modifier, LocalDate.now(), events)
+            MonthCalendarView(Modifier, LocalDate.now(), events) {
+
+            }
         }
     }
 }

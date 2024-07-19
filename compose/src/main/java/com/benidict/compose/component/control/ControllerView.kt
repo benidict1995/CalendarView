@@ -1,6 +1,7 @@
 package com.benidict.compose.component.control
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
@@ -24,6 +27,8 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.benidict.compose.R
+import com.benidict.compose.component.spinner.YearSpinner
+import com.benidict.compose.utilities.loadYears
 import com.benidict.compose.utilities.monthYearFromDate
 import java.time.LocalDate
 
@@ -32,8 +37,13 @@ import java.time.LocalDate
 fun CalendarController(
     selectedDate: LocalDate,
     onForward: (() -> Unit)? = null,
-    onBackward: (() -> Unit)? = null
+    onBackward: (() -> Unit)? = null,
+    onYearChanged: (Int) -> Unit
 ) {
+    //
+    Log.d("makerChecker", "selectedDate-selectedDate:$selectedDate")
+    val years = loadYears()
+    val year = remember { mutableStateOf(years[0]) }
     ConstraintLayout(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -46,17 +56,14 @@ fun CalendarController(
             },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = monthYearFromDate(selectedDate),
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(
-                Modifier.width(5.dp)
-            )
-            Image(
-                painterResource(R.drawable.ic_arrow_forward),
-                colorFilter = ColorFilter.tint(Color.DarkGray),
-                contentDescription = "",
+            YearSpinner(
+                selectedDate = selectedDate,
+                years = years,
+                selectedItem = year.value,
+                onItemSelected = { selectedYear ->
+                    onYearChanged(selectedYear.toInt())
+                    year.value = selectedYear
+                }
             )
         }
 
@@ -93,6 +100,8 @@ fun CalendarController(
 @Preview(showBackground = true)
 fun CalendarControllerPreview() {
     MaterialTheme {
-        CalendarController(LocalDate.now())
+        CalendarController(LocalDate.now()) {
+
+        }
     }
 }

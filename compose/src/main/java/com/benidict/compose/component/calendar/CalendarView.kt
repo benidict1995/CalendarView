@@ -29,6 +29,7 @@ import com.benidict.compose.component.day.DayHeader
 import com.benidict.compose.component.day.DayView
 import com.benidict.compose.shape.CircleEventLegendsView
 import com.benidict.compose.utilities.daysInMonth
+import com.benidict.compose.utilities.loadYears
 import com.benidict.compose.utilities.removeTheEmptyFirstWeek
 import com.benidict.model.CalendarUIModel
 import com.benidict.model.EventUIModel
@@ -41,9 +42,9 @@ fun <T : Any> MonthCalendarView(
     modifier: Modifier,
     selectedDate: LocalDate,
     events: List<EventUIModel<T>>,
-    onRefresh: ((Boolean))?= null,
     onForward: (() -> Unit)? = null,
-    onBackward: (() -> Unit)? = null
+    onBackward: (() -> Unit)? = null,
+    onYearChanged: (Int) -> Unit
 ) {
     val days: ArrayList<CalendarUIModel<T>> = daysInMonth(selectedDate, events)
     val filteredDaysInMonth = removeTheEmptyFirstWeek(days)
@@ -53,6 +54,8 @@ fun <T : Any> MonthCalendarView(
             onBackward?.invoke()
         }, onForward = {
             onForward?.invoke()
+        }, onYearChanged = {
+            onYearChanged(it)
         })
         Spacer(modifier = modifier.height(20.dp))
         DayHeader()
@@ -97,6 +100,8 @@ fun <T : Any> MonthCalendarView(
 fun MonthCalendarViewPreview() {
     val events: List<EventUIModel<Any>> = emptyList()
     MaterialTheme {
-        MonthCalendarView(modifier =  Modifier, selectedDate =  LocalDate.now(), events =  events)
+        MonthCalendarView(modifier =  Modifier, selectedDate =  LocalDate.now(), events =  events) {
+
+        }
     }
 }

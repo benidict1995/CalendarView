@@ -7,17 +7,26 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
+fun updateMonthYear(year: String) {
+
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 fun monthYearFromDate(date: LocalDate): String {
     val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
     return date.format(formatter)
 }
 
-fun loadYears(): List<Int> {
-    val years: MutableList<Int> = ArrayList()
+fun loadYears(): List<String> {
+    val years: MutableList<String> = ArrayList()
+    val yearsInt: MutableList<Int> = ArrayList()
     val thisYear: Int = Calendar.getInstance().get(Calendar.YEAR)
     for (i in 1900..thisYear) {
-        years.add(i)
+        yearsInt.add(i)
     }
+    yearsInt.sortedDescending().forEach { i ->
+        years.add(i.toString())
+    }
+
     return years
 }
