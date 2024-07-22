@@ -31,7 +31,6 @@ fun <T: Any> daysInMonth(selectedDate: LocalDate, events: List<EventUIModel<T>>?
                 YearMonth.parse(month).atDay((i - dayOfWeek)).toString(),
                 events?: emptyList()
             )
-            Log.d("makerChecker", "eventsss:$eventsss")
             daysInMonthArray.add(
                 CalendarUIModel(
                     id = i,

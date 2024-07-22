@@ -40,8 +40,6 @@ fun CalendarController(
     onBackward: (() -> Unit)? = null,
     onYearChanged: (Int) -> Unit
 ) {
-    //
-    Log.d("makerChecker", "selectedDate-selectedDate:$selectedDate")
     val years = loadYears()
     val year = remember { mutableStateOf(years[0]) }
     ConstraintLayout(

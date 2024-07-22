@@ -44,12 +44,12 @@ fun <T : Any> MonthCalendarView(
     events: List<EventUIModel<T>>,
     onForward: (() -> Unit)? = null,
     onBackward: (() -> Unit)? = null,
+    onSelectedDate: ((String) -> Unit)? = null,
     onYearChanged: (Int) -> Unit
 ) {
     val days: ArrayList<CalendarUIModel<T>> = daysInMonth(selectedDate, events)
     val filteredDaysInMonth = removeTheEmptyFirstWeek(days)
     Column {
-        Spacer(modifier = modifier.height(20.dp))
         CalendarController(selectedDate, onBackward = {
             onBackward?.invoke()
         }, onForward = {
@@ -81,7 +81,10 @@ fun <T : Any> MonthCalendarView(
                         DayView(
                             filteredDaysInMonth[day].day.orEmpty(),
                             filteredDaysInMonth[day].date.orEmpty(),
-                            CircleShape
+                            CircleShape,
+                            onSelectedDate = {
+                                onSelectedDate?.invoke(it)
+                            }
                         )
                         Spacer(Modifier.height(4.dp))
                         if (eventList?.isNotEmpty() == true) {

@@ -4,6 +4,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,11 +22,14 @@ import com.benidict.compose.utilities.getDayToday
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DayView(day: String, date: String, shape: Shape) {
+fun DayView(day: String, date: String, shape: Shape, onSelectedDate: ((String) -> Unit)? = null) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentSize(Alignment.Center)
+            .clickable {
+                onSelectedDate?.invoke(date)
+            }
     ) {
         if (date == getDayToday().toString()) {
             Box(
