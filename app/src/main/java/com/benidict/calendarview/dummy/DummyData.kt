@@ -27,6 +27,15 @@ val events = listOf(
         )
     ),
     EventUIModel(
+        date = "2024-07-12",
+        startDate = "2024-07-15",
+        endDate = "2024-07-15",
+        eventDetails = EventDetails(
+            name = "Leet Code",
+            description = "Code with  the fam"
+        )
+    ),
+    EventUIModel(
         date = "2024-08-3",
         startDate = "2024-07-3",
         endDate = "2024-07-3",

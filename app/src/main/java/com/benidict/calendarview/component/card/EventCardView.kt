@@ -22,7 +22,7 @@ fun EventCardView(eventUIModel: EventUIModel<EventDetails>) {
             )
         ) {
             Text(
-                text = eventUIModel.date
+                text = eventUIModel.startDate
             )
             Text(
                 text = eventUIModel.eventDetails?.name.orEmpty()

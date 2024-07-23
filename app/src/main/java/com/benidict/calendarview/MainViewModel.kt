@@ -22,7 +22,8 @@ class MainViewModel @Inject constructor(): ViewModel() {
         Log.d("makerChecker", "selectedDate:$selectedDate")
         viewModelScope.launch {
             val invoke = events.filter {
-                it.date == selectedDate
+                (selectedDate   >= (it.startDate)) &&
+                        (selectedDate <= (it.endDate))
             }
             _events.value = invoke
         }

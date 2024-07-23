@@ -154,6 +154,7 @@ class MainActivity : ComponentActivity() {
                     selectedDateState = selectedDateState.withYear(it)
                 }, onSelectedDate = {
                     onSelectedDate(it)
+                    showBottomSheet(false)
                 })
         }
     }

@@ -7,9 +7,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
-fun updateMonthYear(year: String) {
-
-}
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun monthYearFromDate(date: LocalDate): String {
