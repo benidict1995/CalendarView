@@ -27,10 +27,6 @@ fun <T: Any> daysInMonth(selectedDate: LocalDate, events: List<EventUIModel<T>>?
                 )
             )
         } else {
-            val eventsss = mapEventToCalendarEvents(
-                YearMonth.parse(month).atDay((i - dayOfWeek)).toString(),
-                events?: emptyList()
-            )
             daysInMonthArray.add(
                 CalendarUIModel(
                     id = i,
