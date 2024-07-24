@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
@@ -37,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -49,7 +52,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.benidict.calendarview.component.empty.EmptyEventListView
 import com.benidict.calendarview.component.list.EventListView
+import com.benidict.calendarview.ui.theme.ImageBackgroundColor
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -78,17 +83,17 @@ class MainActivity : ComponentActivity() {
                     },
                     modifier = Modifier.fillMaxSize(),
                     floatingActionButton = {
-                        ExtendedFloatingActionButton(
-                            text = { },
-                            icon = {
-                                Image(
-                                    painterResource(com.benidict.compose.R.drawable.ic_calendar), ""
-                                )
-                            },
+                        FloatingActionButton(
                             onClick = {
                                 showBottomSheet = true
                             }
-                        )
+                        ) {
+                            Icon(
+                                painterResource(com.benidict.compose.R.drawable.ic_calendar),
+                                contentDescription = "",
+                                tint = Color.Black
+                            )
+                        }
                     }
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
@@ -124,7 +129,11 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
-    fun CalendarModal(sheetState: SheetState, showBottomSheet: (Boolean) -> Unit, onSelectedDate: (String) -> Unit) {
+    fun CalendarModal(
+        sheetState: SheetState,
+        showBottomSheet: (Boolean) -> Unit,
+        onSelectedDate: (String) -> Unit
+    ) {
         val scope = rememberCoroutineScope()
         var selectedDateState by remember { mutableStateOf(LocalDate.now()) }
         Column(modifier = Modifier.fillMaxSize()) {

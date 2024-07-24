@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">calendarview</string>
     <string name="all_events">All events</string>
+    <string name="no_event_found">No event found</string>
 </resources>

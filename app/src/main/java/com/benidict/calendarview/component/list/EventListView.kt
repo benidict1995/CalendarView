@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.benidict.calendarview.component.card.EventCardView
+import com.benidict.calendarview.component.empty.EmptyEventListView
 import com.benidict.calendarview.dummy.EventDetails
 import com.benidict.model.EventUIModel
 
@@ -18,6 +19,9 @@ import com.benidict.model.EventUIModel
 fun EventListView(selectedDate: String, events: List<EventUIModel<EventDetails>>) {
     Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
         EventListHeaderView(selectedDate)
+        if(events.isEmpty()) {
+            EmptyEventListView()
+        }
         LazyColumn {
             items(items = events, itemContent = { event ->
                 EventCardView(event)
