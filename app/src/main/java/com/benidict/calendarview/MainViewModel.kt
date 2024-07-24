@@ -19,7 +19,6 @@ class MainViewModel @Inject constructor(): ViewModel() {
     val _events: MutableStateFlow<List<EventUIModel<EventDetails>>> = MutableStateFlow(emptyList())
 
     fun loadCalendarEvent(selectedDate: String) {
-        Log.d("makerChecker", "selectedDate:$selectedDate")
         viewModelScope.launch {
             val invoke = events.filter {
                 (selectedDate   >= (it.startDate)) &&

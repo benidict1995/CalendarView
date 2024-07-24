@@ -22,7 +22,6 @@ fun DropDownYearView(
     val expand by remember { mutableStateOf(true) }
 
     val years = loadYears()
-    Log.d("makerChecker", "years:$years")
     ExposedDropdownMenuBox(
         expanded = expand,
         onExpandedChange = { ex ->

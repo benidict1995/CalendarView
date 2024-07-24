@@ -83,7 +83,6 @@ fun <T : Any> MonthCalendarView(
                             filteredDaysInMonth[day].date.orEmpty(),
                             CircleShape,
                             onSelectedDate = {
-                                Log.d("makerChecker", "selected day event:$it")
                                 onSelectedDate?.invoke(it)
                             }
                         )

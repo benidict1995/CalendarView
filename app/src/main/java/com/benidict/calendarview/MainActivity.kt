@@ -26,6 +26,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -63,11 +64,18 @@ class MainActivity : ComponentActivity() {
                 val viewModel = hiltViewModel<MainViewModel>()
                 val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
                 var showBottomSheet by remember { mutableStateOf(false) }
-                val selectedDate by remember { mutableStateOf(LocalDate.now()) }
+                var selectedDate by remember { mutableStateOf(LocalDate.now().toString()) }
                 LaunchedEffect(Unit) {
-                    viewModel.loadCalendarEvent(selectedDate.toString())
+                    viewModel.loadCalendarEvent(selectedDate)
                 }
                 Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = {
+
+                            }
+                        )
+                    },
                     modifier = Modifier.fillMaxSize(),
                     floatingActionButton = {
                         ExtendedFloatingActionButton(
@@ -85,7 +93,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         val events = viewModel._events.collectAsState()
-                        EventListView(events.value)
+                        EventListView(selectedDate, events.value)
 
                         if (showBottomSheet) {
                             ModalBottomSheet(
@@ -102,6 +110,7 @@ class MainActivity : ComponentActivity() {
                                 CalendarModal(sheetState, showBottomSheet = {
                                     showBottomSheet = it
                                 }, onSelectedDate = {
+                                    selectedDate = it
                                     viewModel.loadCalendarEvent(it)
                                 })
                             }
