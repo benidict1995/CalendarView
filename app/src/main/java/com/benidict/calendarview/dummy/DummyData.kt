@@ -53,22 +53,22 @@ val events = listOf(
         )
     ),
     EventUIModel(
-        date = "2024-07-3",
+        date = "2024-07-03",
         startTime = "2:00 PM",
         endTime = "3:00 PM",
-        startDate = "2024-07-3",
-        endDate = "2024-07-3",
+        startDate = "2024-07-03",
+        endDate = "2024-07-03",
         eventDetails = EventDetails(
             name = "Connan Vaccine",
             description = "Vaccine Day!"
         )
     ),
     EventUIModel(
-        date = "2024-08-3",
+        date = "2024-08-03",
         startTime = "2:00 PM",
         endTime = "3:00 PM",
-        startDate = "2024-08-3",
-        endDate = "2024-08-3",
+        startDate = "2024-08-03",
+        endDate = "2024-08-03",
         eventDetails = EventDetails(
             name = "Wedding Date",
             description = "Finally!"

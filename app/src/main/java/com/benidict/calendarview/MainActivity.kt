@@ -66,9 +66,11 @@ import java.time.LocalDate
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.benidict.calendarview.component.empty.EmptyEventListView
 import com.benidict.calendarview.component.list.EventListView
+import com.benidict.calendarview.dummy.EventDetails
 import com.benidict.calendarview.ui.theme.ImageBackgroundColor
 import com.benidict.calendarview.ui.theme.PurpleGrey80
 import com.benidict.compose.utilities.loadYears
+import com.benidict.model.EventUIModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -132,6 +134,7 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         val events = viewModel._events.collectAsState()
+                        val monthEvents = viewModel._monthEvents.collectAsState()
                         val years = viewModel._years.collectAsState()
                         EventListView(selectedDate, events.value)
 
@@ -148,6 +151,7 @@ class MainActivity : ComponentActivity() {
                                 ),
                             ) {
                                 CalendarModal(
+                                    monthEvents = monthEvents.value,
                                     years = years.value,
                                     selectedYear = selectedYear,
                                     selectedDate,
@@ -172,6 +176,7 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     fun CalendarModal(
+        monthEvents: List<EventUIModel<EventDetails>>,
         years: List<String>,
         selectedYear: String,
         selectedDateState: LocalDate,
@@ -208,7 +213,7 @@ class MainActivity : ComponentActivity() {
                 selectedYear = selectedYear,
                 selectedDate = selectedDateState,
                 years = years,
-                events = events,
+                events = monthEvents,
                 onBackward = {
                     previousMonth(selectedDateState) {
                         onSelectedDate(it)
