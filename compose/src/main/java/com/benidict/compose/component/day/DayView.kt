@@ -23,7 +23,7 @@ import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DayView(day: String, date: String, shape: Shape, onSelectedDate: ((LocalDate) -> Unit)? = null) {
+fun DayView(selectedDate: String, day: String, date: String, shape: Shape, onSelectedDate: ((LocalDate) -> Unit)? = null) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -33,12 +33,9 @@ fun DayView(day: String, date: String, shape: Shape, onSelectedDate: ((LocalDate
             }
     ) {
         if (date == getDayToday().toString()) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(30.dp)
-                    .clip(shape)
-                    .background(Color.Blue)
+            CircleDayView(
+                color = Color.Blue,
+                shape = shape
             ) {
                 Text(
                     color = Color.White,
@@ -46,9 +43,21 @@ fun DayView(day: String, date: String, shape: Shape, onSelectedDate: ((LocalDate
                 )
             }
         } else {
-            Text(
-                text = day
-            )
+            if (selectedDate == date) {
+                CircleDayView(
+                    color = Color(0xFFD5E2FA),
+                    shape = shape
+                ) {
+                    Text(
+                        color = Color.Blue,
+                        text = day
+                    )
+                }
+            } else {
+                Text(
+                    text = day
+                )
+            }
         }
     }
 }

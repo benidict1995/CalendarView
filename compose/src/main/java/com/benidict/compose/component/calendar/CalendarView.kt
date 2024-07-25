@@ -85,6 +85,7 @@ fun <T : Any> MonthCalendarView(
                                 .width(5.dp)
                         )
                         DayView(
+                            selectedDate = selectedDate.toString(),
                             filteredDaysInMonth[day].day.orEmpty(),
                             filteredDaysInMonth[day].date.orEmpty(),
                             CircleShape,
