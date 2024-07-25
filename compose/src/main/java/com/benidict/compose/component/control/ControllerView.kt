@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
@@ -35,13 +36,13 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CalendarController(
+    years: List<String>,
+    selectedYear: String,
     selectedDate: LocalDate,
     onForward: (() -> Unit)? = null,
     onBackward: (() -> Unit)? = null,
     onYearChanged: (Int) -> Unit
 ) {
-    val years = loadYears()
-    val year = remember { mutableStateOf(years[0]) }
     ConstraintLayout(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -57,10 +58,9 @@ fun CalendarController(
             YearSpinner(
                 selectedDate = selectedDate,
                 years = years,
-                selectedItem = year.value,
+                selectedItem = selectedYear,
                 onItemSelected = { selectedYear ->
                     onYearChanged(selectedYear.toInt())
-                    year.value = selectedYear
                 }
             )
         }
@@ -98,7 +98,7 @@ fun CalendarController(
 @Preview(showBackground = true)
 fun CalendarControllerPreview() {
     MaterialTheme {
-        CalendarController(LocalDate.now()) {
+        CalendarController(emptyList(), "", LocalDate.now()) {
 
         }
     }

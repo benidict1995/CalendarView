@@ -40,23 +40,29 @@ import java.time.LocalDate
 @Composable
 fun <T : Any> MonthCalendarView(
     modifier: Modifier,
+    selectedYear: String,
     selectedDate: LocalDate,
+    years: List<String>,
     events: List<EventUIModel<T>>,
     onForward: (() -> Unit)? = null,
     onBackward: (() -> Unit)? = null,
-    onSelectedDate: ((String) -> Unit)? = null,
+    onSelectedDate: ((LocalDate) -> Unit)? = null,
     onYearChanged: (Int) -> Unit
 ) {
     val days: ArrayList<CalendarUIModel<T>> = daysInMonth(selectedDate, events)
     val filteredDaysInMonth = removeTheEmptyFirstWeek(days)
     Column {
-        CalendarController(selectedDate, onBackward = {
-            onBackward?.invoke()
-        }, onForward = {
-            onForward?.invoke()
-        }, onYearChanged = {
-            onYearChanged(it)
-        })
+        CalendarController(
+            years = years,
+            selectedYear = selectedYear,
+            selectedDate = selectedDate,
+            onBackward = {
+                onBackward?.invoke()
+            }, onForward = {
+                onForward?.invoke()
+            }, onYearChanged = {
+                onYearChanged(it)
+            })
         Spacer(modifier = modifier.height(20.dp))
         DayHeader()
         Spacer(modifier = modifier.height(10.dp))
@@ -103,7 +109,13 @@ fun <T : Any> MonthCalendarView(
 fun MonthCalendarViewPreview() {
     val events: List<EventUIModel<Any>> = emptyList()
     MaterialTheme {
-        MonthCalendarView(modifier =  Modifier, selectedDate =  LocalDate.now(), events =  events) {
+        MonthCalendarView(
+            modifier = Modifier,
+            selectedYear = "",
+            selectedDate = LocalDate.now(),
+            years = emptyList(),
+            events = events
+        ) {
 
         }
     }

@@ -2,6 +2,7 @@ package com.benidict.calendarview
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -40,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -66,6 +68,7 @@ import com.benidict.calendarview.component.empty.EmptyEventListView
 import com.benidict.calendarview.component.list.EventListView
 import com.benidict.calendarview.ui.theme.ImageBackgroundColor
 import com.benidict.calendarview.ui.theme.PurpleGrey80
+import com.benidict.compose.utilities.loadYears
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -78,13 +81,20 @@ class MainActivity : ComponentActivity() {
         setContent {
             CalendarviewTheme {
                 val viewModel = hiltViewModel<MainViewModel>()
+
                 val sheetState = rememberModalBottomSheetState(
-                    skipPartiallyExpanded = false)
-                var showBottomSheet by remember { mutableStateOf(false) }
-                var selectedDate by remember { mutableStateOf(LocalDate.now().toString()) }
+                    skipPartiallyExpanded = true
+                )
+                var bottomSheetState by remember { mutableStateOf(false) }
+
+                var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+
+                var selectedYear by remember { mutableStateOf(loadYears()[0]) }
+
                 LaunchedEffect(Unit) {
                     viewModel.loadCalendarEvent(selectedDate)
                 }
+
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -109,7 +119,7 @@ class MainActivity : ComponentActivity() {
                     floatingActionButton = {
                         FloatingActionButton(
                             onClick = {
-                                showBottomSheet = true
+                                bottomSheetState = true
                             }
                         ) {
                             Icon(
@@ -122,26 +132,34 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         val events = viewModel._events.collectAsState()
+                        val years = viewModel._years.collectAsState()
                         EventListView(selectedDate, events.value)
 
-                        if (showBottomSheet) {
+                        if (bottomSheetState) {
                             ModalBottomSheet(
-                                modifier = Modifier.fillMaxHeight(0.8f),
+                                modifier = Modifier.fillMaxHeight(0.7f),
                                 sheetState = sheetState,
                                 onDismissRequest = {
-                                    showBottomSheet = false
+                                    bottomSheetState = false
                                 },
                                 shape = RoundedCornerShape(
                                     topStart = 10.dp,
                                     topEnd = 10.dp
                                 ),
                             ) {
-                                CalendarModal(sheetState, showBottomSheet = {
-                                    showBottomSheet = it
-                                }, onSelectedDate = {
-                                    selectedDate = it
-                                    viewModel.loadCalendarEvent(it)
-                                })
+                                CalendarModal(
+                                    years = years.value,
+                                    selectedYear = selectedYear,
+                                    selectedDate,
+                                    sheetState, showBottomSheet = {
+                                        bottomSheetState = it
+                                    }, onSelectedDate = {
+                                        selectedDate = it
+                                        viewModel.loadCalendarEvent(it)
+                                    },
+                                    onSelectedYear = {
+                                        selectedYear = it.toString()
+                                    })
                             }
                         }
                     }
@@ -154,12 +172,15 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     fun CalendarModal(
+        years: List<String>,
+        selectedYear: String,
+        selectedDateState: LocalDate,
         sheetState: SheetState,
         showBottomSheet: (Boolean) -> Unit,
-        onSelectedDate: (String) -> Unit
+        onSelectedDate: (LocalDate) -> Unit,
+        onSelectedYear: (Int) -> Unit
     ) {
         val scope = rememberCoroutineScope()
-        var selectedDateState by remember { mutableStateOf(LocalDate.now()) }
         Column(modifier = Modifier.fillMaxSize()) {
             Row {
                 Spacer(
@@ -168,7 +189,7 @@ class MainActivity : ComponentActivity() {
                 IconButton(
                     onClick = {
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
-                            if (!sheetState.isVisible) {
+                            if (sheetState.isVisible.not()) {
                                 showBottomSheet(false)
                             }
                         }
@@ -183,20 +204,29 @@ class MainActivity : ComponentActivity() {
             Spacer(
                 modifier = Modifier.height(30.dp)
             )
-            MonthCalendarView(Modifier, selectedDateState, events,
+            MonthCalendarView(Modifier,
+                selectedYear = selectedYear,
+                selectedDate = selectedDateState,
+                years = years,
+                events = events,
                 onBackward = {
                     previousMonth(selectedDateState) {
-                        selectedDateState = it
+                        onSelectedDate(it)
                     }
                 }, onForward = {
                     nextMonth(selectedDateState) {
-                        selectedDateState = it
+                        onSelectedDate(it)
                     }
                 }, onYearChanged = {
-                    selectedDateState = selectedDateState.withYear(it)
+                    onSelectedYear(it)
+                    onSelectedDate(selectedDateState.withYear(it))
                 }, onSelectedDate = {
                     onSelectedDate(it)
-                    showBottomSheet(false)
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (sheetState.isVisible.not()) {
+                            showBottomSheet(false)
+                        }
+                    }
                 })
         }
     }

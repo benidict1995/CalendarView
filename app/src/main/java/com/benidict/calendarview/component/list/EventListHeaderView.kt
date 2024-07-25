@@ -13,9 +13,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.benidict.calendarview.R
 import com.benidict.compose.utilities.getCustomDateString
+import java.time.LocalDate
 
 @Composable
-fun EventListHeaderView(selectedDate: String) {
+fun EventListHeaderView(selectedDate: LocalDate) {
     Spacer(
         modifier = Modifier.height(20.dp)
     )
@@ -25,7 +26,7 @@ fun EventListHeaderView(selectedDate: String) {
         text = stringResource(R.string.all_events)
     )
     Text(
-        text = getCustomDateString(selectedDate),
+        text = getCustomDateString(selectedDate.toString()),
         fontSize = 13.sp,
         fontWeight = FontWeight.Normal
     )

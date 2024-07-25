@@ -19,16 +19,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import com.benidict.compose.utilities.getDayToday
+import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DayView(day: String, date: String, shape: Shape, onSelectedDate: ((String) -> Unit)? = null) {
+fun DayView(day: String, date: String, shape: Shape, onSelectedDate: ((LocalDate) -> Unit)? = null) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentSize(Alignment.Center)
             .clickable {
-                onSelectedDate?.invoke(date)
+                onSelectedDate?.invoke(LocalDate.parse(date))
             }
     ) {
         if (date == getDayToday().toString()) {

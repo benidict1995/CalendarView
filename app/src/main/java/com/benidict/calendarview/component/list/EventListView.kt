@@ -1,6 +1,7 @@
 package com.benidict.calendarview.component.list
 
-import android.util.Log
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,9 +15,10 @@ import com.benidict.calendarview.component.card.EventCardView
 import com.benidict.calendarview.component.empty.EmptyEventListView
 import com.benidict.calendarview.dummy.EventDetails
 import com.benidict.model.EventUIModel
+import java.time.LocalDate
 
 @Composable
-fun EventListView(selectedDate: String, events: List<EventUIModel<EventDetails>>) {
+fun EventListView(selectedDate: LocalDate, events: List<EventUIModel<EventDetails>>) {
     Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
         EventListHeaderView(selectedDate)
         if(events.isEmpty()) {
@@ -30,10 +32,11 @@ fun EventListView(selectedDate: String, events: List<EventUIModel<EventDetails>>
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @Preview(showBackground = true)
 fun EventListViewPreview() {
     MaterialTheme {
-        EventListView(selectedDate = "", emptyList())
+        EventListView(selectedDate = LocalDate.now(), emptyList())
     }
 }
