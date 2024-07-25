@@ -16,6 +16,9 @@ import com.benidict.compose.utilities.getCustomDateString
 
 @Composable
 fun EventListHeaderView(selectedDate: String) {
+    Spacer(
+        modifier = Modifier.height(20.dp)
+    )
     Text(
         fontSize = 34.sp,
         fontWeight = FontWeight.ExtraBold,

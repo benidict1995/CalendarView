@@ -6,6 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.TweenSpec
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,16 +21,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,7 +48,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.benidict.calendarview.dummy.events
 import com.benidict.calendarview.ui.theme.CalendarviewTheme
 import com.benidict.compose.component.calendar.MonthCalendarView
@@ -55,6 +65,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.benidict.calendarview.component.empty.EmptyEventListView
 import com.benidict.calendarview.component.list.EventListView
 import com.benidict.calendarview.ui.theme.ImageBackgroundColor
+import com.benidict.calendarview.ui.theme.PurpleGrey80
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -67,7 +78,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             CalendarviewTheme {
                 val viewModel = hiltViewModel<MainViewModel>()
-                val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+                val sheetState = rememberModalBottomSheetState(
+                    skipPartiallyExpanded = false)
                 var showBottomSheet by remember { mutableStateOf(false) }
                 var selectedDate by remember { mutableStateOf(LocalDate.now().toString()) }
                 LaunchedEffect(Unit) {
@@ -76,8 +88,20 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         TopAppBar(
+                            navigationIcon = {
+                                IconButton(onClick = { }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.ArrowBack,
+                                        contentDescription = "Back"
+                                    )
+                                }
+                            },
                             title = {
-
+                                Text(
+                                    fontWeight = FontWeight.Black,
+                                    fontSize = 20.sp,
+                                    text = ""
+                                )
                             }
                         )
                     },
