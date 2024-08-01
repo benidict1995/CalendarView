@@ -81,7 +81,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            CalendarviewTheme {
+            CalendarviewTheme(
+                darkTheme = false
+            ) {
                 val viewModel = hiltViewModel<MainViewModel>()
 
                 val sheetState = rememberModalBottomSheetState(
