@@ -1,7 +1,6 @@
 package com.benidict.compose.utilities
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.benidict.model.CalendarUIModel
 import com.benidict.model.EventUIModel
@@ -9,7 +8,10 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun <T: Any> daysInMonth(selectedDate: LocalDate, events: List<EventUIModel<T>>?): ArrayList<CalendarUIModel<T>> {
+fun <T : Any> daysInMonth(
+    selectedDate: LocalDate,
+    events: List<EventUIModel<T>>?
+): ArrayList<CalendarUIModel<T>> {
     val daysInMonthArray = ArrayList<CalendarUIModel<T>>()
     val months = YearMonth.from(selectedDate)
     val days = months.lengthOfMonth()
@@ -34,7 +36,7 @@ fun <T: Any> daysInMonth(selectedDate: LocalDate, events: List<EventUIModel<T>>?
                     date = YearMonth.parse(month).atDay((i - dayOfWeek)).toString(),
                     events = mapEventToCalendarEvents(
                         YearMonth.parse(month).atDay((i - dayOfWeek)).toString(),
-                        events?: emptyList()
+                        events ?: emptyList()
                     )
                 )
             )
@@ -43,7 +45,7 @@ fun <T: Any> daysInMonth(selectedDate: LocalDate, events: List<EventUIModel<T>>?
     return daysInMonthArray
 }
 
-fun <T: Any> removeTheEmptyFirstWeek(daysInMonth: ArrayList<CalendarUIModel<T>>): ArrayList<CalendarUIModel<T>> {
+fun <T : Any> removeTheEmptyFirstWeek(daysInMonth: ArrayList<CalendarUIModel<T>>): ArrayList<CalendarUIModel<T>> {
     var daysEmptyCounter = 0
     daysInMonth.forEachIndexed { index, calendarUIModel ->
         when (index) {
@@ -59,7 +61,7 @@ fun <T: Any> removeTheEmptyFirstWeek(daysInMonth: ArrayList<CalendarUIModel<T>>)
     }
 }
 
-private fun <T: Any> setNewSetOfDate(daysInMonth: ArrayList<CalendarUIModel<T>>): ArrayList<CalendarUIModel<T>> {
+private fun <T : Any> setNewSetOfDate(daysInMonth: ArrayList<CalendarUIModel<T>>): ArrayList<CalendarUIModel<T>> {
     val newDaysInMonth = ArrayList<CalendarUIModel<T>>()
     daysInMonth.forEachIndexed { index, calendarUIModel ->
         if (index >= 7) {
@@ -81,15 +83,38 @@ fun getDayToday(): LocalDate = LocalDate.now()
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun previousMonth(selectedDate: LocalDate, refreshView: (LocalDate) -> Unit) {
-    refreshView(selectedDate.minusMonths(1))
+    var currentSelectedMonth: Long = selectedDate.monthValue.minus(1).toLong()
+    if (currentSelectedMonth < 1) {
+        currentSelectedMonth = 1
+        val newSelectedDate = selectedDate.run {
+            minusYears(1)
+            minusMonths(currentSelectedMonth)
+        }
+        refreshView(newSelectedDate)
+    } else {
+        refreshView(selectedDate.minusMonths(1))
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun nextMonth(selectedDate: LocalDate, refreshView: (LocalDate) -> Unit) {
-    refreshView(selectedDate.plusMonths(1))
+    var currentSelectedMonth: Long = selectedDate.monthValue.plus(1).toLong()
+    if (currentSelectedMonth > 12) {
+        currentSelectedMonth -= 12
+        val newSelectedDate = selectedDate.run {
+            plusYears(1)
+            plusMonths(currentSelectedMonth)
+        }
+        refreshView(newSelectedDate)
+    } else {
+        refreshView(selectedDate.plusMonths(1))
+    }
 }
 
-private fun <T> mapEventToCalendarEvents(dateToday: String, events: List<EventUIModel<T>>): List<EventUIModel<T>> {
+private fun <T> mapEventToCalendarEvents(
+    dateToday: String,
+    events: List<EventUIModel<T>>
+): List<EventUIModel<T>> {
     val calendarEvents: ArrayList<EventUIModel<T>> = ArrayList()
     events.filter {
         mapEventDateRangeEvent(
