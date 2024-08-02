@@ -218,10 +218,14 @@ class MainActivity : ComponentActivity() {
                 events = monthEvents,
                 onBackward = {
                     previousMonth(selectedDateState) {
+                        onSelectedYear(it.year)
+                        onSelectedDate(selectedDateState.withYear(it.year))
                         onSelectedDate(it)
                     }
                 }, onForward = {
                     nextMonth(selectedDateState) {
+                        onSelectedYear(it.year)
+                        onSelectedDate(selectedDateState.withYear(it.year))
                         onSelectedDate(it)
                     }
                 }, onYearChanged = {
